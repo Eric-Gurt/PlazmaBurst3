@@ -26,7 +26,9 @@
         "win": {
             "target": "nsis",
             "icon": "build/icon.ico",
-            "publisherName": "Eric Gurt"
+            "publisherName": "Eric Gurt",
+	    
+	    "artifactName": "Plazma Burst 3 Setup.exe"
         },
         "directories": {
             "buildResources": "build"

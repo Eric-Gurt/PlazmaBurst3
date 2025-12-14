@@ -31,6 +31,7 @@ autoUpdater.autoDownload = false; // Don't auto-download, ask user first
 autoUpdater.autoInstallOnAppQuit = false;
 let updateAvailable = false;
 let updateDownloaded = false;
+let updateChecking = false;
 let next_update_check_after = 0;
 
 //app.disableHardwareAcceleration();
@@ -54,15 +55,25 @@ autoUpdater.on( 'update-available', ( info )=>
 {
 	trace( 'Update available:', info.version );
 	updateAvailable = true;
+	updateChecking = false;
 
 	// Show notification
 	//showNotification('Update Available', `Version ${info.version} is available. Click to download.`);
+	NotifyAboutUpdate();
 });
+
+function NotifyAboutUpdate()
+{
+	if ( mainWindow )
+	if ( mainWindow.webContents )
+	mainWindow.webContents.send( 'app-update-available', {} );
+}
 
 autoUpdater.on( 'update-not-available', ()=>
 {
 	trace( 'App is up to date' );
 	updateAvailable = false;
+	updateChecking = false;
 });
 
 autoUpdater.on( 'download-progress', ( progressObj )=>
@@ -331,15 +342,29 @@ function ShowMainWindow()
 		let time = Date.now();
 		if ( time > next_update_check_after )
 		{
-			next_update_check_after = time + 1000 * 5;
+			next_update_check_after = time + 1000 * 60 * 5;
 			
-			autoUpdater.checkForUpdates();
+			if ( updateAvailable )
+			{
+				if ( !updateChecking )
+				{
+					updateChecking = true;
+					autoUpdater.checkForUpdates();
+				}
+			}
+			else
+			NotifyAboutUpdate();
 		}
-		
-		await delay( 1000 );
-		
-		return { updateAvailable:updateAvailable, updateDownloaded:updateDownloaded };
 	});
+	ipcMain.handle( ':UpdateNow', ()=>
+	{
+		if ( updateDownloaded )
+		{
+			mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Installing update...` ));
+			autoUpdater.quitAndInstall();
+		}
+	});
+	
 	
 	ipcMain.on( ':SendUDP', udp.pb3Send );
 	

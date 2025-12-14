@@ -1,5 +1,5 @@
 
-/* global process */
+/* global process, pb2Web */
 
 const { contextBridge, ipcRenderer } = require('electron');
 
@@ -13,16 +13,26 @@ const api =
 	SendUDP: ( data )=>ipcRenderer.send( ':SendUDP', data ),
 	Quit: ( data )=>ipcRenderer.send( ':Quit', data ),
 	SetTargetDomain: ( domain )=>ipcRenderer.send( ':SetTargetDomain', domain ),
-	
+	CheckForAppUpdates: ()=>ipcRenderer.send( ':CheckForAppUpdates' ),
+	UpdateNow: ()=>ipcRenderer.send( ':UpdateNow' ),
 	
 	// ipcRenderer.invoke to return Promise
-	CheckForAppUpdates: ()=>ipcRenderer.invoke( ':CheckForAppUpdates' ), // Promise
+	//___: ()=>ipcRenderer.invoke( ':___' ),
 	
 	
 	// return ipcRenderer.sendSync for synchronous return values
 	GetUDP: ( key )=>ipcRenderer.sendSync( ':GetUDP', key )
 	
 };
+
+
+ipcRenderer.on( 'app-update-available', ( event, data )=>
+{
+	if ( typeof pb2Web !== 'undefined' )
+	if ( pb2Web.GetHashInfo().section === 'menu' )
+	pb2Web.NewNote( `Application update is available<br><a onclick="electronAPI.UpdateNow()">Update & restart</a>` );
+});
+		
 
 // Expose the API at globalThis.electronAPI
 contextBridge.exposeInMainWorld( 'electronAPI', api );

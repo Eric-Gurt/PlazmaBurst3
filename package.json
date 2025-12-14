@@ -10,7 +10,7 @@
         "build": "electron-builder --win --x64",
         "publish": "electron-builder --win --x64 --publish always",
         "preversion": "git add . && git commit -m \"Incremental update\"",
-        "postversion": "git push --follow-tags"
+        "postversion": "git pull && git push --follow-tags"
     },
     "dependencies": {
         "electron-updater": "^6.6.2",

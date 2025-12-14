@@ -10,7 +10,7 @@
         "build": "electron-builder --win --x64",
         "publish": "electron-builder --win --x64 --publish always",
         "preversion": "git add . && git commit -m \"Incremental update\"",
-        "postversion": "git pull && git push --follow-tags"
+        "postversion": "git pull && git push --follow-tags && git tag -a vABC -m \"Test release\" && git push origin vABC"
     },
     "dependencies": {
         "electron-updater": "^6.6.2",
@@ -59,8 +59,7 @@
         "publish": {
             "provider": "github",
             "owner": "Eric-Gurt",
-            "repo": "PlazmaBurst3",
-            "releaseType": "release"
+            "repo": "PlazmaBurst3"
         }
     }
 }

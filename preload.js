@@ -30,7 +30,7 @@ ipcRenderer.on( 'app-update-available', ( event, data )=>
 {
 	if ( typeof pb2Web !== 'undefined' )
 	if ( pb2Web.GetHashInfo().section === 'menu' )
-	pb2Web.NewNote( `Application update is available<br><a onclick="electronAPI.UpdateNow()">Update & restart</a>` );
+	pb2Web.NewNote( `Application update is available<br><br><a onclick="electronAPI.UpdateNow()">Click here to update & restart</a>` );
 });
 		
 

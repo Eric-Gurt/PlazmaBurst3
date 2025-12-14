@@ -337,23 +337,23 @@ function ShowMainWindow()
 	
 	ipcMain.on( ':Quit', Quit );
 	
-	ipcMain.handle( ':CheckForAppUpdates', async ( event )=> 
+	ipcMain.on( ':CheckForAppUpdates', ( event )=> 
 	{
-		let time = Date.now();
-		if ( time > next_update_check_after )
+		if ( updateAvailable )
+		NotifyAboutUpdate();
+		else
 		{
-			next_update_check_after = time + 1000 * 60 * 5;
-			
-			if ( updateAvailable )
+			let time = Date.now();
+			if ( time > next_update_check_after )
 			{
+				next_update_check_after = time + 1000 * 60 * 5;
+
 				if ( !updateChecking )
 				{
 					updateChecking = true;
-					autoUpdater.checkForUpdates();
+					autoUpdater.checkForUpdates(); // Won't do anything unless packaged, will just hang in checking state
 				}
 			}
-			else
-			NotifyAboutUpdate();
 		}
 	});
 	ipcMain.handle( ':UpdateNow', ()=>

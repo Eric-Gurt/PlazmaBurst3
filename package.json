@@ -1,21 +1,20 @@
 {
     "author": "Eric Gurt",
-    "name": "Plazma Burst 3",
-    "version": "1.0.0",
+    "name": "PlazmaBurst3",
+    "version": "1.0.4",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
     "scripts": {
         "start": "electron --inspect=9230 . --enable-logging",
         "startlocal": "electron --PB3_FORCE_LOCALHOST --inspect=9230 . --enable-logging",
         "build": "electron-builder --win --x64",
-	"publish": "electron-builder --win --x64 --publish always"
+        "publish": "electron-builder --win --x64 --publish always"
     },
     "dependencies": {
         "electron-updater": "^6.6.2",
         "ws": "^8.14.2"
     },
     "devDependencies": {
-        "@electron/rebuild": "^4.0.2",
         "electron": "^39.2.7",
         "electron-builder": "^24.13.3"
     },
@@ -25,13 +24,14 @@
         "win": {
             "target": "nsis",
             "icon": "build/icon.ico",
-	    "publisherName": "Eric Gurt"
+            "publisherName": "Eric Gurt"
         },
         "directories": {
             "buildResources": "build"
         },
         "files": [
             "electron-main.js",
+            "preload.js",
             "build/icon.png",
             "build/icon.ico",
             "node_modules/ws/**/*"
@@ -53,11 +53,10 @@
             "allowElevation": true,
             "perMachine": false
         },
-	
-	"publish": {
-	    "provider": "github",
-	    "owner": "Eric-Gurt",
-	    "repo": "PlazmaBurst3"
-	}
+        "publish": {
+            "provider": "github",
+            "owner": "Eric-Gurt",
+            "repo": "PlazmaBurst3"
+        }
     }
 }

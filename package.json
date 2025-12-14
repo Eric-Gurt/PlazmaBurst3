@@ -1,7 +1,7 @@
 {
     "author": "Eric Gurt",
     "name": "PlazmaBurst3",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
     "scripts": {

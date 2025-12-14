@@ -1,7 +1,7 @@
 {
     "author": "Eric Gurt",
     "name": "PlazmaBurst3",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
     "scripts": {
@@ -27,8 +27,7 @@
             "target": "nsis",
             "icon": "build/icon.ico",
             "publisherName": "Eric Gurt",
-	    
-	    "artifactName": "Plazma Burst 3 Setup.exe"
+            "artifactName": "Plazma Burst 3 Setup.exe"
         },
         "directories": {
             "buildResources": "build"

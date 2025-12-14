@@ -1,7 +1,7 @@
 {
     "author": "Eric Gurt",
     "name": "PlazmaBurst3",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
     "scripts": {
@@ -9,10 +9,8 @@
         "startlocal": "electron --PB3_FORCE_LOCALHOST --inspect=9230 . --enable-logging",
         "build": "electron-builder --win --x64",
         "publish": "electron-builder --win --x64 --publish always",
-	
-	
-	"preversion": "git add . && git commit -m \"Incremental update\"",
-	"postversion": "git push --follow-tags"
+        "preversion": "git add . && git commit -m \"Incremental update\"",
+        "postversion": "git push --follow-tags"
     },
     "dependencies": {
         "electron-updater": "^6.6.2",

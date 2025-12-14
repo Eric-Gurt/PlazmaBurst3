@@ -1,4 +1,4 @@
-This is only a Chromium-based Electron.js wrapper for Plazma Burst 3. It does not contain the game itself but is able to cache most of its' files once game was loaded.
+This is only a Chromium-based Electron.js wrapper for Plazma Burst 3. It does not contain the game itself but is able to cache most of its' files once you've authenticated and the game is loaded.
 
 It has UDP proxying support for connections which I'm considering as alternative to WebRTC not working in all cases (testing for now only).
 

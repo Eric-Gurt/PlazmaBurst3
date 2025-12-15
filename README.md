@@ -3,3 +3,8 @@ This is only a Chromium-based Electron.js wrapper for Plazma Burst 3. It does no
 It has UDP proxying support for connections which I'm considering as alternative to WebRTC not working in all cases (testing for now only).
 
 It has hardware acceleration enabled by default so it may work for players with 2 GPUs out of the box if your Windows was defaulting to slower integrated GPU.
+
+Installer and source code download links:
+https://github.com/Eric-Gurt/PlazmaBurst3/releases
+
+It will check for updates while in the main menu.

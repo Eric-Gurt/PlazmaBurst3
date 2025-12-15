@@ -1,14 +1,14 @@
 {
     "author": "Eric Gurt",
     "name": "Plazma-Burst-3",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
     "scripts": {
         "start": "electron --inspect=9230 . --enable-logging",
         "startlocal": "electron --PB3_FORCE_LOCALHOST --inspect=9230 . --enable-logging",
         "build": "electron-builder --win --x64",
-        "publish": "electron-builder --win --x64 --publish always"
+        "release": "electron-builder --win --x64 --publish always"
     },
     "dependencies": {
         "electron-updater": "^6.6.2",

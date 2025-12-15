@@ -1,6 +1,6 @@
 {
     "author": "Eric Gurt",
-    "name": "PlazmaBurst3",
+    "name": "Plazma-Burst-3",
     "version": "1.0.25",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
@@ -24,11 +24,14 @@
         "appId": "com.plazmaburst3.standalone",
         "productName": "Plazma Burst 3",
         "win": {
-            "target": "nsis",
+	    "target": [ "portable", "zip" ],
             "icon": "build/icon.ico",
             "publisherName": "Eric Gurt",
-            "artifactName": "Plazma Burst 3 Setup.exe"
+            "artifactName": "Plazma Burst 3.${ext}"
         },
+	"portable": {
+	  "artifactName": "Plazma Burst 3.exe"
+	},
         "directories": {
             "buildResources": "build"
         },
@@ -46,6 +49,7 @@
             "main": "electron-main.js"
         },
         "nsis": {
+	    "artifactName": "Plazma-Burst-3-setup.exe",
             "oneClick": false,
             "allowToChangeInstallationDirectory": true,
             "createDesktopShortcut": true,

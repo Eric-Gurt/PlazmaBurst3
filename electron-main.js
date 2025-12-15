@@ -8,7 +8,7 @@ const { ipcMain, session, clipboard } = require('electron');
 
 const trace = console.log;
 
-// Test 8
+// Test 9
 
 let initial_website_url = 'https://www.plazmaburst.net';
 if ( process.argv.indexOf( '--PB3_FORCE_LOCALHOST' ) !== -1 )

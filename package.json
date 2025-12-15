@@ -25,8 +25,7 @@
         "productName": "Plazma Burst 3",
         "win": {
             "target": [
-                "portable",
-                "zip"
+                "nsis"
             ],
             "icon": "build/icon.ico",
             "publisherName": "Eric Gurt",
@@ -52,7 +51,7 @@
             "main": "electron-main.js"
         },
         "nsis": {
-            "artifactName": "Plazma-Burst-3-setup.exe",
+            "artifactName": "Plazma Burst 3 setup.exe",
             "oneClick": false,
             "allowToChangeInstallationDirectory": true,
             "createDesktopShortcut": true,

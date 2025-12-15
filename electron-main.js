@@ -334,6 +334,8 @@ function ShowMainWindow()
 			app.quit();
 
 			mainWindow = null;
+			
+			setTimeout( ()=>app.exit(0), 5000 );
 		}
 	}
 	

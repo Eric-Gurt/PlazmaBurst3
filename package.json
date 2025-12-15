@@ -8,6 +8,7 @@
         "start": "electron --inspect=9230 . --enable-logging",
         "startlocal": "electron --PB3_FORCE_LOCALHOST --inspect=9230 . --enable-logging",
         "build": "electron-builder --win --x64",
+	
         "publish": "electron-builder --win --x64 --publish always",
         "preversion": "git add . && git commit -m \"Incremental update\"",
         "postversion": "z_postversion.bat"

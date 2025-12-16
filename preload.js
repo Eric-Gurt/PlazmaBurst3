@@ -8,6 +8,7 @@ const api =
     // Simple static data
     //IS_DESKTOP_APP: true,
 	
+	test: 1,
 	
 	// ipcRenderer.send for no return value
 	SendUDP: ( data )=>ipcRenderer.send( ':SendUDP', data ),

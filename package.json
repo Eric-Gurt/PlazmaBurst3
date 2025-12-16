@@ -1,7 +1,7 @@
 {
     "author": "Eric Gurt",
     "name": "Plazma-Burst-3",
-    "version": "0.0.17",
+    "version": "0.0.18",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
     "scripts": {
@@ -27,7 +27,8 @@
             ],
             "icon": "build/icon.ico",
             "publisherName": "Eric Gurt",
-            "artifactName": "Plazma Burst 3.${ext}"
+            "artifactName": "Plazma Burst 3.${ext}",
+            "verifyUpdateCodeSignature": false
         },
         "portable": {
             "artifactName": "Plazma Burst 3.exe"

@@ -446,13 +446,31 @@ function ShowMainWindow()
 	});
 	
 	
+	const ALLOWED_ORIGINS = [
+		//'file:///',
+		'chrome-devtools://',
+		'data:',
+		'https://www.plazmaburst.net',
+		'https://s1.plazmaburst.net',
+		'https://s2.plazmaburst.net',
+		'https://s3.plazmaburst.net',
+		'https://s4.plazmaburst.net',
+		'http://localhost',
+		'https://localhost'
+	];
+
 	session.defaultSession.webRequest.onBeforeRequest( ( details, callback )=>
 	{
+		const requestUrl = details.url;
+		
 		let isBlocked = false;
+		
+		isBlocked = !ALLOWED_ORIGINS.some( ( origin )=>requestUrl.startsWith( origin ) );
 		
 		if ( isBlocked )
 		{
-			trace( `[BLOCKED by webRequest]: ${ details.url}` );
+			trace( `[ external resource blocked ]: ${ requestUrl }` );
+			
 			// Return { cancel: true } to block the request
 			callback({ cancel: true }); 
 		}

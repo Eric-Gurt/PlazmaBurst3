@@ -85,7 +85,7 @@ autoUpdater.on( 'download-progress', ( progressObj )=>
 {
 	//trace( `Download progress: ${ progressObj.percent }%` );
 	
-	mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Downloading update... ${ progressObj.percent }%` ));
+	mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Downloading update... ${ Math.floor( progressObj.percent ) }%` ));
 });
 
 autoUpdater.on( 'update-downloaded', ( info )=>
@@ -121,7 +121,7 @@ function StartUDP()
 
 	udp = dgram.createSocket( 'udp4' );
 	
-	let time = Date.now();
+	/*let time = Date.now();
 	let received_queue = [];
 	let outgoing_queue = [];
 	let permission_granted_until = 0;
@@ -134,16 +134,16 @@ function StartUDP()
 		time = Date.now();
 	}, 300 );
 	
-	let debug_udp = 0;
+	let debug_udp = 1;
 	
 	udp.on( 'message', ( msg )=>
 	{
 		let message = msg.toString();
 		
 		if ( debug_udp )
-		trace( 'Got message: ' + message );
+		trace( 'Got message: ', message, 'at', Date.now() );
 		
-		if ( message.startsWith( '?' ) && message.length === 8 + 1 ) // x1 - Server doesn't want out messages, for now at least
+		if ( message.startsWith( '?' ) && message.length === 8 + 1 ) // x1 - Server doesn't want our messages, for now at least
 		{
 			permission_granted_until = time + grant_duration;
 			permission_denied_until = 0;
@@ -177,9 +177,6 @@ function StartUDP()
 	
 	let onSent = ( err )=>
 	{
-		if ( debug_udp )
-		trace( 'onSend called, error status: ', err );
-		
 		if ( err )
 		{
 			console.error( 'Error sending to server:', err );
@@ -191,11 +188,11 @@ function StartUDP()
 	udp.pb3Send = ( event, data )=> 
 	{
 		if ( debug_udp )
-        trace( `electron got SendUDP`, data );
+        trace( `electron got SendUDP`, data, 'at', Date.now() );
 		
 		if ( time < permission_denied_until )
 		{
-			console.error( `Message dropped due to lack of permission` );
+			console.error( `Message delayed due to lack of permission` );
 			outgoing_queue.push( data );
 		}
 		else
@@ -205,16 +202,28 @@ function StartUDP()
 			if ( time >= permission_granted_until )
 			{
 				permission_denied_until = time + 1000;
-				send_iterations = outgoing_queue.length; // Send all scheduled messages
+				send_iterations = outgoing_queue.length + 1; // Send all scheduled messages + current message
 			}
 			
 			if ( outgoing_queue.length === 0 )
-			udp.send( data, target_port, target_domain, onSent );
+			{
+				if ( debug_udp )
+				trace( `udp.send`, data, 'at', Date.now() );
+
+				udp.send( data, target_port, target_domain, onSent );
+			}
 			else
 			{
 				outgoing_queue.push( data );
 				while ( outgoing_queue.length > 0 && send_iterations-- > 0 )
-				udp.send( outgoing_queue.shift(), target_port, target_domain, onSent);
+				{
+					let d = outgoing_queue.shift();
+
+					if ( debug_udp )
+					trace( `udp.send`, data, 'at', Date.now() );
+
+					udp.send( d, target_port, target_domain, onSent );
+				}
 			}
 		}
     };
@@ -223,6 +232,79 @@ function StartUDP()
 	{
 		event.returnValue = received_queue;
 		received_queue = [];
+	};*/
+	let received_queue = [];
+	let outgoing_queue = [];
+	
+	const MODE_SLOW = 0;
+	const MODE_NORMAL = 1;
+	
+	let mode = MODE_SLOW;
+	
+	let next_slow_send = 0;
+	
+	udp.on( 'message', ( msg )=>
+	{
+		let message = msg.toString();
+		
+		if ( message.startsWith( '?' ) && message.length === 8 + 1 ) // Confirmation message
+		{
+			udp.send( message.substring( 1 ), target_port, target_domain, onSent );
+			
+			mode = MODE_NORMAL;
+			
+			return;
+		}
+		
+		if ( received_queue.length < 1000 )
+		received_queue.push( message );
+	});
+	
+	udp.pb3Send = ( event, data )=> 
+	{
+		if ( mode === MODE_NORMAL )
+		{
+			while ( outgoing_queue.length > 0 )
+			{
+				udp.send( outgoing_queue.shift(), target_port, target_domain, onSent );
+			}
+			
+			udp.send( data, target_port, target_domain, onSent );
+		}
+		else
+		if ( mode === MODE_SLOW )
+		{
+			if ( outgoing_queue.length < 100 )
+			outgoing_queue.push( data );
+			
+			let t = Date.now();
+			
+			if ( t > next_slow_send )
+			{
+				next_slow_send = t + 500;
+				
+				udp.send( outgoing_queue.shift(), target_port, target_domain, onSent );
+			}
+		}
+	};
+	
+	udp.pb3Get = ( event )=>
+	{
+		event.returnValue = received_queue;
+		received_queue = [];
+	};
+	
+	
+	
+	udp.on( 'error', ( err )=>
+	{
+		console.error( 'UDP error:', err );
+	});
+	
+	let onSent = ( err )=>
+	{
+		if ( err )
+		console.error( 'Error sending to server:', err );
 	};
 }
 

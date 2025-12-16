@@ -241,6 +241,8 @@ function ShowMainWindow()
 		title: 'Plazma Burst 3',
 		resizable: true,
 		fullscreenable: true,
+		
+		show: false,
 
 		webPreferences: 
 		{
@@ -434,11 +436,6 @@ function ShowMainWindow()
 	{
 		event.preventDefault();
 	});
-  
-	// Open DevTools automatically
-	if ( initial_website_url === 'http://localhost' )
-	mainWindow.webContents.openDevTools();
-  
 	
 	mainWindow.webContents.on( 'render-process-gone', ( event, webContents, details )=>
 	{
@@ -471,7 +468,18 @@ function ShowMainWindow()
 	
 	//mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent(`Redirect in 1 second`));
   
+  
+	// Open DevTools automatically
+	if ( initial_website_url === 'http://localhost' )
+	mainWindow.webContents.openDevTools();
+  
 	mainWindow.loadURL( initial_website_url );
 
 	mainWindow.on( 'closed', Quit );
+	
+	
+	if ( initial_website_url !== 'http://localhost' )
+	mainWindow.maximize();
+
+    mainWindow.show();
 }

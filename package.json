@@ -1,7 +1,7 @@
 {
     "author": "Eric Gurt",
     "name": "Plazma-Burst-3",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "description": "Plazma Burst 3 browser game wrapper with additional features",
     "main": "electron-main.js",
     "scripts": {
@@ -19,7 +19,7 @@
         "electron-builder": "^24.13.3"
     },
     "build": {
-        "appId": "com.plazmaburst3.standalone",
+        "appId": "com.ericgurt.plazmaburst3",
         "productName": "Plazma Burst 3",
         "win": {
             "target": [

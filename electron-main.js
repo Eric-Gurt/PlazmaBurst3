@@ -94,6 +94,9 @@ autoUpdater.on( 'update-downloaded', ( info )=>
 	updateDownloaded = true;
 
 	//showNotification('Update Ready', 'Update will install when you quit the app, or click to restart now.');
+
+	mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Installing update...` ));
+	autoUpdater.quitAndInstall();
 });
 autoUpdater.on( 'error', (err)=>
 {
@@ -369,16 +372,8 @@ function ShowMainWindow()
 	{
 		mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Downloading update...` ));
 		
-		autoUpdater.downloadUpdate.then( ()=>
-		{
-			if ( !updateDownloaded )
-			console.error( 'downloadUpdate called but update is still not downloaded? Ignoring this for now' );
-			
-			mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Installing update...` ));
-			autoUpdater.quitAndInstall();
-		});
+		autoUpdater.downloadUpdate();
 	});
-	
 	
 	ipcMain.on( ':SendUDP', udp.pb3Send );
 	

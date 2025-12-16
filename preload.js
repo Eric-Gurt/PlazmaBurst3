@@ -3,6 +3,8 @@
 
 const { contextBridge, ipcRenderer } = require('electron');
 
+let allowed_event_listeners = [ 'app-update-available' ]; // Unsafe to expose other .on-s
+
 const api = 
 {
     // Simple static data
@@ -22,18 +24,21 @@ const api =
 	
 	
 	// return ipcRenderer.sendSync for synchronous return values
-	GetUDP: ( key )=>ipcRenderer.sendSync( ':GetUDP', key )
+	GetUDP: ( key )=>ipcRenderer.sendSync( ':GetUDP', key ),
 	
+	
+	// Listeners
+	removeAllListeners: ( channel )=>
+	{
+		if ( allowed_event_listeners.includes( channel ) ) // Unsafe to expose other .on-s
+		ipcRenderer.removeAllListeners( channel );
+	},
+	on: ( channel, callback )=>
+	{
+		if ( allowed_event_listeners.includes( channel ) ) // Unsafe to expose other .on-s
+		ipcRenderer.on( channel, ( event, data )=>callback( data ) );
+	}
 };
-
-
-ipcRenderer.on( 'app-update-available', ( event, data )=>
-{
-	if ( typeof pb2Web !== 'undefined' )
-	if ( pb2Web.GetHashInfo().section === 'menu' )
-	pb2Web.NewNote( `Application update is available<br><br><a onclick="electronAPI.UpdateNow()">Click here to update & restart</a>` );
-});
-		
 
 // Expose the API at globalThis.electronAPI
 contextBridge.exposeInMainWorld( 'electronAPI', api );

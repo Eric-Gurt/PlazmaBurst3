@@ -367,7 +367,7 @@ function ShowMainWindow()
 			}
 		}
 	});
-	ipcMain.handle( ':UpdateNow', ()=>
+	ipcMain.on( ':UpdateNow', ()=>
 	{
 		mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Downloading update...` ));
 		

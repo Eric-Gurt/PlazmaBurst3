@@ -85,7 +85,9 @@ autoUpdater.on( 'update-not-available', ()=>
 
 autoUpdater.on( 'download-progress', ( progressObj )=>
 {
-	trace( `Download progress: ${ progressObj.percent }%` );
+	//trace( `Download progress: ${ progressObj.percent }%` );
+	
+	mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Downloading update... ${ progressObj.percent }%` ));
 });
 
 autoUpdater.on( 'update-downloaded', ( info )=>
@@ -367,11 +369,16 @@ function ShowMainWindow()
 	});
 	ipcMain.handle( ':UpdateNow', ()=>
 	{
-		if ( updateDownloaded )
+		mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Downloading update...` ));
+		
+		autoUpdater.downloadUpdate.then( ()=>
 		{
+			if ( !updateDownloaded )
+			console.error( 'downloadUpdate called but update is still not downloaded? Ignoring this for now' );
+			
 			mainWindow.loadURL('data:text/html;charset=utf-8,' + encodeURIComponent( `Installing update...` ));
 			autoUpdater.quitAndInstall();
-		}
+		});
 	});
 	
 	

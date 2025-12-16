@@ -35,13 +35,10 @@ let updateAvailable = false;
 let updateDownloaded = false;
 let updateChecking = false;
 let next_update_check_after = 0;
-// Set GitHub token to avoid rate limits
-process.env.GH_TOKEN = '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'; // Plazma Burst 3 update token for players
 autoUpdater.setFeedURL({
 	provider: 'github',
 	owner: 'Eric-Gurt',
-	repo: 'PlazmaBurst3',
-	token: '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'
+	repo: 'PlazmaBurst3'
 });
 
 //app.disableHardwareAcceleration();

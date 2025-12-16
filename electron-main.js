@@ -234,6 +234,57 @@ function ShowMainWindow()
 		return;
 	}
 	
+	const PARTITION_NAME = 'persist:pb3-isolated-data';
+			
+	const isolatedSession = session.fromPartition( PARTITION_NAME );
+	
+	const ALLOWED_ORIGINS = [
+		//'file:///',
+		'chrome-devtools://',
+		'devtools://',
+		'data:',
+		'https://www.plazmaburst.net',
+		'https://s1.plazmaburst.net',
+		'https://s2.plazmaburst.net',
+		'https://s3.plazmaburst.net',
+		'https://s4.plazmaburst.net',
+		'http://localhost',
+		'https://localhost',
+		'ws://localhost',
+		'ws://www.plazmaburst.net',
+		'ws://s1.plazmaburst.net',
+		'ws://s2.plazmaburst.net',
+		'ws://s3.plazmaburst.net',
+		'ws://s4.plazmaburst.net',
+		'wss://localhost',
+		'wss://www.plazmaburst.net',
+		'wss://s1.plazmaburst.net',
+		'wss://s2.plazmaburst.net',
+		'wss://s3.plazmaburst.net',
+		'wss://s4.plazmaburst.net'
+	];
+	isolatedSession.webRequest.onBeforeRequest( ( details, callback )=>
+	{
+		const requestUrl = details.url;
+		
+		let isBlocked = false;
+		
+		isBlocked = !ALLOWED_ORIGINS.some( ( origin )=>requestUrl.startsWith( origin ) );
+		
+		if ( isBlocked )
+		{
+			trace( `[ external resource blocked ]: ${ requestUrl }` );
+			
+			// Return { cancel: true } to block the request
+			callback({ cancel: true }); 
+		}
+		else
+		{
+			// Return { cancel: false } to allow the request
+			callback({ cancel: false });
+		}
+	});
+	
 	mainWindow = new BrowserWindow(
 	{
 		width: 1920,
@@ -256,7 +307,7 @@ function ShowMainWindow()
 			webSecurity: true,
 			allowRunningInsecureContent: false,
 
-			partition: 'persist:pb3-isolated-data',
+			partition: PARTITION_NAME,
 
 			backgroundThrottling: false,
 
@@ -443,42 +494,6 @@ function ShowMainWindow()
 		console.error( 'Event Details:', event, webContents, details );
 		// Reload the window for recovery:
 		// mainWindow.reload(); 
-	});
-	
-	
-	const ALLOWED_ORIGINS = [
-		//'file:///',
-		'chrome-devtools://',
-		'data:',
-		'https://www.plazmaburst.net',
-		'https://s1.plazmaburst.net',
-		'https://s2.plazmaburst.net',
-		'https://s3.plazmaburst.net',
-		'https://s4.plazmaburst.net',
-		'http://localhost',
-		'https://localhost'
-	];
-
-	session.defaultSession.webRequest.onBeforeRequest( ( details, callback )=>
-	{
-		const requestUrl = details.url;
-		
-		let isBlocked = false;
-		
-		isBlocked = !ALLOWED_ORIGINS.some( ( origin )=>requestUrl.startsWith( origin ) );
-		
-		if ( isBlocked )
-		{
-			trace( `[ external resource blocked ]: ${ requestUrl }` );
-			
-			// Return { cancel: true } to block the request
-			callback({ cancel: true }); 
-		}
-		else
-		{
-			// Return { cancel: false } to allow the request
-			callback({ cancel: false });
-		}
 	});
 	
 	

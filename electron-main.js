@@ -320,6 +320,7 @@ function ShowMainWindow()
 			
 	const isolatedSession = session.fromPartition( PARTITION_NAME );
 	
+	//let allowedOriginsEnabled = true;
 	const ALLOWED_ORIGINS = [
 		//'file:///',
 		'chrome-devtools://',
@@ -345,17 +346,37 @@ function ShowMainWindow()
 		'wss://s3.plazmaburst.net',
 		'wss://s4.plazmaburst.net'
 	];
+	const ALLOWED_FOLLOW_ORIGINS = [
+		'https://www.patreon.com'
+	];
 	isolatedSession.webRequest.onBeforeRequest( ( details, callback )=>
 	{
 		const requestUrl = details.url;
 		
 		let isBlocked = false;
 		
-		isBlocked = !ALLOWED_ORIGINS.some( ( origin )=>requestUrl.startsWith( origin ) );
+		if ( mainWindow && mainWindow.webContents )
+		{
+			let current_url = mainWindow.webContents.getURL();
+			let allowedOriginsEnabled = ( ALLOWED_ORIGINS.some( ( origin )=>current_url.startsWith( origin ) ) );
+
+			if ( allowedOriginsEnabled )
+			{
+				isBlocked = !(
+						ALLOWED_ORIGINS.some( ( origin )=>requestUrl.startsWith( origin ) ) ||
+						ALLOWED_FOLLOW_ORIGINS.some( ( origin )=>requestUrl.startsWith( origin ) ) 
+				);
+			}
+		}
+		else
+		{
+			trace( 'No mainWindow.webContents - blocking remaining requests post app close' );
+			isBlocked = true;
+		}
 		
 		if ( isBlocked )
 		{
-			trace( `[ external resource blocked ]: ${ requestUrl }` );
+			trace( `[ external resource blocked ]: ${ requestUrl }, current_url: ${ current_url }` );
 			
 			// Return { cancel: true } to block the request
 			callback({ cancel: true }); 
@@ -513,6 +534,10 @@ function ShowMainWindow()
 	ipcMain.on( ':SendUDP', udp.pb3Send );
 	
 	ipcMain.on( ':GetUDP', udp.pb3Get );
+	
+	ipcMain.on( ':SetAllowedOriginsEnabled', ( v )=>{
+		allowedOriginsEnabled = v;
+	} );
 	
 	mainWindow.webContents.on( 'context-menu', ( event, params )=>
 	{

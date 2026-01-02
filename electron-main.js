@@ -355,9 +355,11 @@ function ShowMainWindow()
 		
 		let isBlocked = false;
 		
+		let current_url = 'app is closing';
+		
 		if ( mainWindow && mainWindow.webContents )
 		{
-			let current_url = mainWindow.webContents.getURL();
+			current_url = mainWindow.webContents.getURL();
 			let allowedOriginsEnabled = ( ALLOWED_ORIGINS.some( ( origin )=>current_url.startsWith( origin ) ) );
 
 			if ( allowedOriginsEnabled )

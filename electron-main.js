@@ -404,7 +404,7 @@ function ShowMainWindow()
 		{
 			//nodeIntegration: true,
 			//contextIsolation: false,
-
+			
 			sandbox: true,
 			contextIsolation: true,
 			nodeIntegration: false,
@@ -540,6 +540,15 @@ function ShowMainWindow()
 	ipcMain.on( ':SetAllowedOriginsEnabled', ( v )=>{
 		allowedOriginsEnabled = v;
 	} );
+	
+	mainWindow.webContents.setWindowOpenHandler( ( params )=>
+	{
+		// Use the shell module to open the URL in the system's default browser
+		shell.openExternal( params.url );
+
+		// 'deny' prevents Electron from opening its own internal window
+		return { action: 'deny' };
+	});
 	
 	mainWindow.webContents.on( 'context-menu', ( event, params )=>
 	{
